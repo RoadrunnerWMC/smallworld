@@ -118,7 +118,7 @@ pub fn run_file_conversion_function(
     conversion_function: impl Fn(&mut dyn SeekRead, &mut dyn SeekWrite) -> Result<()>,
 ) -> Result<()> {
     // Open input file
-    let mut in_file = File::open(&input_filepath)
+    let mut in_file = File::open(input_filepath)
         .with_context(|| format!("couldn't open input file \"{}\"", input_filepath.display()))?;
 
     // If the output file can be proven distinct from the input file,
@@ -147,7 +147,7 @@ pub fn run_file_conversion_function(
         // the input file.
 
         // Open the output file
-        let mut out_file = File::create(&output_filepath).with_context(|| {
+        let mut out_file = File::create(output_filepath).with_context(|| {
             format!(
                 "couldn't open output file \"{}\"",
                 output_filepath.display()
@@ -170,7 +170,7 @@ pub fn run_file_conversion_function(
         );
 
         // Open the output file and write the buffer data to it
-        File::create(&output_filepath)
+        File::create(output_filepath)
             .with_context(|| {
                 format!(
                     "couldn't open output file \"{}\"",

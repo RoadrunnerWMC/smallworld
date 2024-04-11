@@ -200,15 +200,13 @@ fn get_anim_folder(fnt: &U8Node) -> Result<&U8FolderNode, ConvertOpeningTitleBet
     fnt.get(ANIM_FOLDER_PATH)
         .ok_or_else(|| {
             ConvertOpeningTitleBetweenRegionsError::InvalidOpeningTitleStructure(format!(
-                "{} folder not found",
-                ANIM_FOLDER_PATH
+                "{ANIM_FOLDER_PATH} folder not found",
             ))
         })?
         .as_folder()
         .ok_or_else(|| {
             ConvertOpeningTitleBetweenRegionsError::InvalidOpeningTitleStructure(format!(
-                "{} wasn't a folder",
-                ANIM_FOLDER_PATH
+                "{ANIM_FOLDER_PATH} wasn't a folder",
             ))
         })
 }
@@ -221,15 +219,13 @@ fn get_mut_anim_folder(
     fnt.get_mut(ANIM_FOLDER_PATH)
         .ok_or_else(|| {
             ConvertOpeningTitleBetweenRegionsError::InvalidOpeningTitleStructure(format!(
-                "{} folder not found",
-                ANIM_FOLDER_PATH
+                "{ANIM_FOLDER_PATH} folder not found",
             ))
         })?
         .as_mut_folder()
         .ok_or_else(|| {
             ConvertOpeningTitleBetweenRegionsError::InvalidOpeningTitleStructure(format!(
-                "{} wasn't a folder",
-                ANIM_FOLDER_PATH
+                "{ANIM_FOLDER_PATH} wasn't a folder",
             ))
         })
 }
@@ -240,15 +236,13 @@ fn get_blyt_folder(fnt: &U8Node) -> Result<&U8FolderNode, ConvertOpeningTitleBet
     fnt.get(BLYT_FOLDER_PATH)
         .ok_or_else(|| {
             ConvertOpeningTitleBetweenRegionsError::InvalidOpeningTitleStructure(format!(
-                "{} folder not found",
-                BLYT_FOLDER_PATH
+                "{BLYT_FOLDER_PATH} folder not found",
             ))
         })?
         .as_folder()
         .ok_or_else(|| {
             ConvertOpeningTitleBetweenRegionsError::InvalidOpeningTitleStructure(format!(
-                "{} wasn't a folder",
-                BLYT_FOLDER_PATH
+                "{BLYT_FOLDER_PATH} wasn't a folder",
             ))
         })
 }
@@ -261,15 +255,13 @@ fn get_mut_blyt_folder(
     fnt.get_mut(BLYT_FOLDER_PATH)
         .ok_or_else(|| {
             ConvertOpeningTitleBetweenRegionsError::InvalidOpeningTitleStructure(format!(
-                "{} folder not found",
-                BLYT_FOLDER_PATH
+                "{BLYT_FOLDER_PATH} folder not found",
             ))
         })?
         .as_mut_folder()
         .ok_or_else(|| {
             ConvertOpeningTitleBetweenRegionsError::InvalidOpeningTitleStructure(format!(
-                "{} wasn't a folder",
-                BLYT_FOLDER_PATH
+                "{BLYT_FOLDER_PATH} wasn't a folder",
             ))
         })
 }
@@ -303,11 +295,11 @@ fn remove_regional_files(
     // Remove all requested files from /arc/anim
     for region in regions {
         let region_name = region.into();
-        let mut region_files = map.get_mut(&region).unwrap();
+        let region_files = map.get_mut(&region).unwrap();
 
         let filename = ALL_FILENAMES[region_name].in_press_brlan;
         if let Some(U8Node::File(file_node)) = folder.remove(filename) {
-            trace!("Removing {:?}", filename);
+            trace!("Removing {filename:?}");
             region_files.in_press_brlan = Some(NamedU8FileNode {
                 node: file_node,
                 filename: filename.to_owned(),
@@ -316,7 +308,7 @@ fn remove_regional_files(
 
         let filename = ALL_FILENAMES[region_name].in_title_brlan;
         if let Some(U8Node::File(file_node)) = folder.remove(filename) {
-            trace!("Removing {:?}", filename);
+            trace!("Removing {filename:?}");
             region_files.in_title_brlan = Some(NamedU8FileNode {
                 node: file_node,
                 filename: filename.to_owned(),
@@ -325,7 +317,7 @@ fn remove_regional_files(
 
         let filename = ALL_FILENAMES[region_name].loop_press_brlan;
         if let Some(U8Node::File(file_node)) = folder.remove(filename) {
-            trace!("Removing {:?}", filename);
+            trace!("Removing {filename:?}");
             region_files.loop_press_brlan = Some(NamedU8FileNode {
                 node: file_node,
                 filename: filename.to_owned(),
@@ -334,7 +326,7 @@ fn remove_regional_files(
 
         let filename = ALL_FILENAMES[region_name].out_press_brlan;
         if let Some(U8Node::File(file_node)) = folder.remove(filename) {
-            trace!("Removing {:?}", filename);
+            trace!("Removing {filename:?}");
             region_files.out_press_brlan = Some(NamedU8FileNode {
                 node: file_node,
                 filename: filename.to_owned(),
@@ -351,11 +343,11 @@ fn remove_regional_files(
 
     for region in regions {
         let region_name = region.into();
-        let mut region_files = map.get_mut(&region).unwrap();
+        let region_files = map.get_mut(&region).unwrap();
 
         let filename = ALL_FILENAMES[region_name].brlyt;
         if let Some(U8Node::File(file_node)) = folder.remove(filename) {
-            trace!("Removing {:?}", filename);
+            trace!("Removing {filename:?}");
             region_files.brlyt = Some(NamedU8FileNode {
                 node: file_node,
                 filename: filename.to_owned(),

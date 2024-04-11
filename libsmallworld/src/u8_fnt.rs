@@ -14,7 +14,7 @@ use crate::util;
 /// The "magic" identifier at the beginning of every U8 file. Often
 /// written as `b"U\xaa8-"` (the ASCII characters of which lend "U8"
 /// files their unofficial name).
-pub const U8_MAGIC: u32 = 0x55aa382d;
+pub const U8_MAGIC: u32 = 0x55aa_382d;
 
 /// All errors that can be encountered when parsing a U8 file.
 #[non_exhaustive]
@@ -296,10 +296,10 @@ pub fn read<SR: Seek + Read>(file: &mut SR) -> Result<(U8Node, u32), ParseU8Erro
 
     // "Size" field of the root node tells us the total number of nodes;
     // this is how we calculate the offset of the string table
-    file.seek(SeekFrom::Start((root_node_offs + 8).into()))?;
+    file.seek(SeekFrom::Start(root_node_offs.wrapping_add(8).into()))?;
     let root_node_size: u32 = file.read_be()?;
     trace!("root_node_size={root_node_size:#x}");
-    let string_table_offs = root_node_offs + 12 * root_node_size;
+    let string_table_offs = root_node_offs.wrapping_add(root_node_size.wrapping_mul(12));
     trace!("string_table_offs={string_table_offs:#x}");
 
     // Inner function for recursion
@@ -318,13 +318,13 @@ pub fn read<SR: Seek + Read>(file: &mut SR) -> Result<(U8Node, u32), ParseU8Erro
         file.seek(SeekFrom::Start(node_offs.into()))?;
         let first_u32: u32 = file.read_be()?;
         let node_type: u8 = (first_u32 >> 24).try_into().unwrap();
-        let name_offs = first_u32 & 0x00ffffff;
+        let name_offs = first_u32 & 0x00ff_ffff;
         let data_offs: u32 = file.read_be()?;
         let size: u32 = file.read_be()?;
         trace!("Node {idx} header: ({node_type}, {name_offs:#x}, {data_offs:#x}, {size:#x})");
 
         // Read node name string
-        file.seek(SeekFrom::Start((string_table_offs + name_offs).into()))?;
+        file.seek(SeekFrom::Start(string_table_offs.wrapping_add(name_offs).into()))?;
         let name = file.read_be::<NullString>()?.to_string();
         trace!("Node {idx} name: {name:?}");
 
@@ -334,7 +334,7 @@ pub fn read<SR: Seek + Read>(file: &mut SR) -> Result<(U8Node, u32), ParseU8Erro
                 Ok((
                     name,
                     U8Node::File(U8FileNode {
-                        offset: data_offs - data_table_offs,
+                        offset: data_offs.wrapping_sub(data_table_offs),
                         size,
                     }),
                 ))
@@ -527,7 +527,7 @@ pub fn write<SW: Seek + Write>(file: &mut SW, root: &U8Node) -> Result<(), io::E
         file_data_offsets_to_write.len()
     );
     for (offs, relative_value) in file_data_offsets_to_write {
-        file.seek(SeekFrom::Start(offs as u64))?;
+        file.seek(SeekFrom::Start(offs))?;
         file.write_all(&(data_table_offset + relative_value).to_be_bytes())?;
     }
 
