@@ -73,7 +73,18 @@ Instead of all that, you can just let smallworld take care of it for you. Quickl
 
 **Does it work with Newer SMBW?** Yes.
 
-**If the file is at different paths in different regions, how can they share a single file in a mod?** That can be done through the Riivolution XML (you are using Riivolution, right?). Add an entry for each region's `openingTitle` folder, and point them all to a single shared folder in your mod.
+**If the file is at different paths in different regions, how can they share a single file in a mod?** That can be done through the Riivolution XML (you are using Riivolution, right?). Add an entry for each region's `openingTitle.arc` file, and point them all to a single shared one in your mod.
+
+For example, if you put your `openingTitle.arc` in `Lang/Layout/openingTitle/openingTitle.arc`:
+
+```xml
+<file external="Lang/Layout/openingTitle/openingTitle.arc" disc="/EU/Layout/openingTitle/openingTitle.arc" />
+<file external="Lang/Layout/openingTitle/openingTitle.arc" disc="/US/Layout/openingTitle/openingTitle.arc" />
+<file external="Lang/Layout/openingTitle/openingTitle.arc" disc="/JP/Layout/openingTitle/openingTitle.arc" />
+<file external="Lang/Layout/openingTitle/openingTitle.arc" disc="/KR/Layout/openingTitle/openingTitle.arc" />
+<file external="Lang/Layout/openingTitle/openingTitle.arc" disc="/TW/Layout/openingTitle/openingTitle.arc" />
+<file external="Lang/Layout/openingTitle/openingTitle.arc" disc="/CN/Layout/openingTitle/openingTitle.arc" />
+```
 
 **How do I *edit* a region-free `openingTitle.arc`? There are so many duplicate files in it!** You have two options:
 
